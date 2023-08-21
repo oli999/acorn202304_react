@@ -1,0 +1,15 @@
+/* src/css/custom.css 파일 */
+
+.box{
+    width: 100px;
+    height: 100px;
+    border: 1px solid red;
+}
+
+.bg-yellow{
+    background-color: yellow;
+}
+
+.bg-pink{
+    background-color: pink;
+}
