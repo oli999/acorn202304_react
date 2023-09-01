@@ -7,12 +7,15 @@ import './index.css';
 // App.js 파일을 불러와서 App 라는 이름으로 사용하기 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {BrowserRouter} from 'react-router-dom';
 
 // public/index.html 파일에서 id 가 root 인 요소에  App 을  렌더링하기 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 );
 
