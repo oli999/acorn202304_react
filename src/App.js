@@ -1,6 +1,6 @@
 import { NavLink, Route, Routes } from "react-router-dom";
 
-import {Home} from './pages';
+import {Home, Member, MemberForm, MemberUpdateForm} from './pages';
 import BsNavbar from "./components/BsNavbar";
 
 function App() {
@@ -12,7 +12,9 @@ function App() {
         
         <Routes>
           <Route path="/" Component={Home}/>
-
+          <Route path="/members" Component={Member}/>
+          <Route path="/members/new" Component={MemberForm}/>
+          <Route path="/members/:num/edit" Component={MemberUpdateForm}/>
         </Routes>
       </div>
     </>

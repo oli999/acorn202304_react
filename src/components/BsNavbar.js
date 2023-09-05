@@ -13,7 +13,7 @@ export default function BsNavbar() {
           <Nav className="me-auto">
             {/* bootstrap Component 를 Router Component 로 교체해서 사용 */}
             <Nav.Link as={NavLink} to="/">Home</Nav.Link>
-            <Nav.Link as={NavLink} to="/member">Member</Nav.Link>
+            <Nav.Link as={NavLink} to="/members">Member</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
