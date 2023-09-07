@@ -1,11 +1,19 @@
 // src/pages/Home.js
 
 import {useState, useRef, useEffect} from 'react';
+//store 로 부터 데이터를 불러오기 위한 함수 
+import { useSelector } from 'react-redux';
 import initToken from '../initToken';
 import axios from 'axios';
 axios.defaults.baseURL="http://localhost:9000/boot08";
 
 export default function Home(){
+    const userName = useSelector((state)=>{
+      //store 에 저장된 state 가 전달이 된다.
+      //전달된 state 에서 필요한 값을 리턴하면
+      return state.userName; //useSeletctor() 함수의 리턴값이된다.
+    });
+
     //localStorage 에 저장된 토큰을 사용할 준비를 한다.
     initToken(localStorage.token);
 
@@ -37,7 +45,7 @@ export default function Home(){
 
     const getToken = ()=>{
       //토큰을 발급 받는 요청이기 때문에 토큰 보내지 않기 
-      axios.get("/hello/token",{headers:{Authorization:"none"}})
+      axios.get("/hello/token")
       .then(res=>{
         console.log(res.data);
         setToken(res.data);
@@ -66,6 +74,9 @@ export default function Home(){
         <button onClick={getToken}>토큰 받아오기</button>
         <button onClick={request}>토큰과 함께 요청하기</button>
         <p>{token}</p>
+        <p>
+          store 에 저장된 userName : <strong>{userName}</strong>
+        </p>
         <h3>공지사항</h3>
         <div className="row">
           <div className="col">
