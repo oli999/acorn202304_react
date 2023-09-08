@@ -21,6 +21,7 @@ export default function BsNavbar() {
             {/* bootstrap Component 를 Router Component 로 교체해서 사용 */}
             <Nav.Link as={NavLink} to="/">Home</Nav.Link>
             <Nav.Link as={NavLink} to="/members">Member</Nav.Link>
+            <Nav.Link as={NavLink} to="/gallery">Gallery</Nav.Link>
           </Nav>
           {/* store 에 userName 이 null 이 아니면 userName 을 출력 아니면 로그인 버튼 출력 */}
           {

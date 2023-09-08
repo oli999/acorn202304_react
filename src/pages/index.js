@@ -5,3 +5,4 @@ export {default as Home} from './Home';
 export {default as Member} from './Member';
 export {default as MemberForm} from './MemberForm';
 export {default as MemberUpdateForm} from './MemberUpdateForm';
+export {default as Gallery} from './Gallery';

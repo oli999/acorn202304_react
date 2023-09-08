@@ -1,6 +1,6 @@
 import { NavLink, Route, Routes } from "react-router-dom";
 
-import {Home, Member, MemberForm, MemberUpdateForm} from './pages';
+import {Gallery, Home, Member, MemberForm, MemberUpdateForm} from './pages';
 import BsNavbar from "./components/BsNavbar";
 // jsontokens 에서 디코더 import
 import {decodeToken} from 'jsontokens';
@@ -21,8 +21,9 @@ function App() {
 
   const dispatch=useDispatch();
   useEffect(()=>{
-    //localStorage 에 저장된 토큰을 디코딩 
+    //만일 localStorage 에 token 이라는 키값으로 저장된 문자열이 있다면  
     if(localStorage.token){
+      //토큰을 디코딩
       const result=decodeToken(localStorage.token);
       //초단위
       const expTime=result.payload.exp*1000; // *1000 을 해서 ms 단위로 만들고 
@@ -50,6 +51,7 @@ function App() {
           <Route path="/members" Component={Member}/>
           <Route path="/members/new" Component={MemberForm}/>
           <Route path="/members/:num/edit" Component={MemberUpdateForm}/>
+          <Route path="/gallery" Component={Gallery}/>
         </Routes>
       </div>
       <MyVerticallyCenteredModal show={modalShow} onHide={()=>{
