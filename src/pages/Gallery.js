@@ -1,17 +1,40 @@
 // src/pages/Gallery.js
 
 import { useEffect, useState } from "react";
-import { Button, Card, Col, FloatingLabel, Form, Modal, Row } from "react-bootstrap";
+import { Button, Card, Col, FloatingLabel, Form, Modal, Pagination, Row } from "react-bootstrap";
 import axios from "axios";
 
 export default function Gallery(){
     const [formShow, setFormShow]=useState(false);
-    const [galleryList, setGalleryList]=useState([]);
+    //const [galleryList, setGalleryList]=useState([]);
+    const [pageInfo, setPageInfo]=useState({
+      content:[]
+    });
+    //페이징 UI 에 사용할 배열
+    const [pageArray, setPageArray]=useState([]);
 
-    const refresh = ()=>{
-        axios.get("/gallery")
+    //페이징 UI 를 만들때 사용할 배열을 리턴해주는 함수 
+    function createArray(start, end) {
+      const result = [];
+      for (let i = start; i <= end; i++) {
+          result.push(i);
+      }
+      return result;
+    }
+    const PAGE_DISPLAY_COUNT=5;
+    //겔러리 목록 새로 고침하는 메소드 
+    const refresh = (pageNum)=>{
+        axios.get("/gallery?pageNum="+pageNum)
         .then(res=>{
-            setGalleryList(res.data);
+            console.log(res.data);
+            setPageInfo(res.data);
+            //페이징 UI 관련 처리
+            const startPageNum=1+Math.floor((pageNum-1)/PAGE_DISPLAY_COUNT)*PAGE_DISPLAY_COUNT;
+            let endPageNum=startPageNum+PAGE_DISPLAY_COUNT-1;
+            if(endPageNum > res.data.totalPages){
+              endPageNum=res.data.totalPages;
+            }
+            setPageArray(createArray(startPageNum, endPageNum));
         })
         .catch(error=>{
             console.log(error);
@@ -19,17 +42,33 @@ export default function Gallery(){
     }
 
     useEffect(()=>{
-        refresh();
+        refresh(1);
     }, []);
 
     const BASE_URL="http://localhost:9000/boot08";
+
+
+
     return (
         <>
             <h3>Gallery 목록 입니다</h3>
+            <Pagination className="mb-3">
+              <Pagination.Item>&laquo;</Pagination.Item>
+              {
+                pageArray.map(num=>(<Pagination.Item onClick={()=>{
+                  refresh(num);
+                }} key={num} active={num === pageInfo.number+1}>{num}</Pagination.Item>))
+              }
+              <Pagination.Item onClick={()=>{
+                // endPageNum+1
+                const pageNum=pageArray[pageArray.length-1]+1;
+                refresh(pageNum);
+              }} disabled={pageArray[pageArray.length-1]+1 >= pageInfo.totalPages}>&raquo;</Pagination.Item>
+            </Pagination>
             <Button variant="outline-success" onClick={()=>{setFormShow(true)}}>+</Button>
             <Row>
             {
-                galleryList.map(item=>(
+                pageInfo.content.map(item=>(
                     <Col sm={6} md={3} key={item.num}>
                         <Card style={{ width: '18rem' }}>
                             <Card.Img variant="top" src={`${BASE_URL}/gallery/images/${item.imagePath}`} />
@@ -44,8 +83,10 @@ export default function Gallery(){
             }
             </Row>
             <UploadFormModal show={formShow} onClose={()=>{
+                //모달을 숨기고 
                 setFormShow(false);
-                refresh();
+                //데이터를 다시 받아와서 화면 refresh
+                refresh(1);
             }}/>
         </>
     )
