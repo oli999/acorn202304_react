@@ -45,26 +45,13 @@ export default function Gallery(){
         refresh(1);
     }, []);
 
-    const BASE_URL="http://localhost:9000/boot08";
+    const BASE_URL="http://localhost:9000";
 
 
 
     return (
         <>
             <h3>Gallery 목록 입니다</h3>
-            <Pagination className="mb-3">
-              <Pagination.Item>&laquo;</Pagination.Item>
-              {
-                pageArray.map(num=>(<Pagination.Item onClick={()=>{
-                  refresh(num);
-                }} key={num} active={num === pageInfo.number+1}>{num}</Pagination.Item>))
-              }
-              <Pagination.Item onClick={()=>{
-                // endPageNum+1
-                const pageNum=pageArray[pageArray.length-1]+1;
-                refresh(pageNum);
-              }} disabled={pageArray[pageArray.length-1]+1 >= pageInfo.totalPages}>&raquo;</Pagination.Item>
-            </Pagination>
             <Button variant="outline-success" onClick={()=>{setFormShow(true)}}>+</Button>
             <Row>
             {
@@ -82,6 +69,23 @@ export default function Gallery(){
                 ))
             }
             </Row>
+
+            <Pagination className="mb-3">
+              <Pagination.Item onClick={()=>{
+                const pageNum=pageArray[0]-1;
+                refresh(pageNum);
+              }} disabled={pageArray[0] === 1}>&laquo;</Pagination.Item>
+              {
+                pageArray.map(num=>(<Pagination.Item onClick={()=>{
+                  refresh(num);
+                }} key={num} active={num === pageInfo.number+1}>{num}</Pagination.Item>))
+              }
+              <Pagination.Item onClick={()=>{
+                // endPageNum+1
+                const pageNum=pageArray[pageArray.length-1]+1;
+                refresh(pageNum);
+              }} disabled={pageArray[pageArray.length-1]+1 >= pageInfo.totalPages}>&raquo;</Pagination.Item>
+            </Pagination>
             <UploadFormModal show={formShow} onClose={()=>{
                 //모달을 숨기고 
                 setFormShow(false);
@@ -99,12 +103,23 @@ function UploadFormModal(props) {
     const [caption, setCaption]=useState("");
     //선택한 이미지 파일 
     const [image, setImage]=useState(null);
+    //선택한 이미지 preview 관련 state
+    const [previewImage, setPreviewImage]=useState(null);
+
     //이미지를 선택했을때 실행되는 함수
     const handleChange=(e)=>{
         //선택한 파일 얻어내기
         const file = e.target.files[0];
         console.log(file);
         setImage(file);
+        //선택한 파일로 부터 이미지 로딩하기
+        const reader=new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload=(event)=>{
+          //읽은 파일 데이터 얻어내기 
+					const data=event.target.result;
+          setPreviewImage(data);
+        };
     }
 
     const handleUpload = ()=>{
@@ -143,7 +158,12 @@ function UploadFormModal(props) {
           <FloatingLabel  controlId="floatingPassword" label="이미지 선택" className="mb-3">
             <Form.Control onChange={handleChange} name="image" type="file" accept="image/*" placeholder="이미지 선택" />
           </FloatingLabel>
-          
+          <Card style={{ width: '18rem' }}>
+            <Card.Img variant="top" src={previewImage} />
+            <Card.Body>
+              <Card.Text>{caption}</Card.Text>
+            </Card.Body>
+          </Card> 
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={handleUpload}>업로드</Button>

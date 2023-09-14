@@ -44,14 +44,11 @@ const store = createStore(reducer);
 // public/index.html 파일에서 id 가 root 인 요소에  App 을  렌더링하기 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    {/* 만든 저장소를 공급해 준다 */}
     <Provider store={store}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
     </Provider>
-  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

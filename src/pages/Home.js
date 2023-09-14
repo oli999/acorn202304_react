@@ -3,9 +3,8 @@
 import {useState, useRef, useEffect} from 'react';
 //store 로 부터 데이터를 불러오기 위한 함수 
 import { useSelector } from 'react-redux';
-import initToken from '../initToken';
 import axios from 'axios';
-axios.defaults.baseURL="http://localhost:9000/boot08";
+axios.defaults.baseURL="http://localhost:9000/";
 
 export default function Home(){
     const userName = useSelector((state)=>{
@@ -13,9 +12,6 @@ export default function Home(){
       //전달된 state 에서 필요한 값을 리턴하면
       return state.userName; //useSeletctor() 함수의 리턴값이된다.
     });
-
-    //localStorage 에 저장된 토큰을 사용할 준비를 한다.
-    initToken(localStorage.token);
 
     const [notice, setNotice] = useState([]);
 
@@ -51,15 +47,13 @@ export default function Home(){
         setToken(res.data);
         //토큰을 localStorage 에 저장하기 (react 와 상관없는 웹브라우저의 저장소)
         localStorage.token=res.data;
-        //axios 의 요청헤더에 자동으로 토큰이 담기도록 한다.
-        initToken(res.data);
       })
       .catch(error=>{
         console.log(error);
       })
     }
     const request = ()=>{
-      axios.get("/fortune")
+      axios.get("/user/info")
       .then(res=>{
         console.log(res.data);
       })

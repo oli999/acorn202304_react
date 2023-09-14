@@ -12,6 +12,8 @@ import {Modal, FloatingLabel, Form, Alert, Button} from 'react-bootstrap';
 // useSelector 는 store 에 있는 값을 불러오기 위한 함수 
 // useDispatch 는 action 을 발행(reducer 에 action 을 전달)하기 위한 함수 
 import { useSelector, useDispatch } from "react-redux";
+import initToken from './initToken';
+import Editor from "./pages/Editor";
 
 function App() {
   //모달을 띄울지 말지 상태값으로 관리!
@@ -35,10 +37,13 @@ function App() {
         dispatch({type:"SHOW_MODAL", payload:true});
       }else{//만료되지 않았으면 로그인된 상태이다
         dispatch({type:"SAVE_USER", payload:result.payload.sub});
+        //localStorage 에 저장된 토큰을 사용할 준비를 한다.
+        initToken(localStorage.token);
       }
     }else{//토큰이 없어도 로그인을 해야한다
       dispatch({type:"SHOW_MODAL", payload:true});
     }
+
   }, []);
 
   return (
@@ -52,6 +57,7 @@ function App() {
           <Route path="/members/new" Component={MemberForm}/>
           <Route path="/members/:num/edit" Component={MemberUpdateForm}/>
           <Route path="/gallery" Component={Gallery}/>
+          <Route path="/editor" Component={Editor}/>
         </Routes>
       </div>
       <MyVerticallyCenteredModal show={modalShow} onHide={()=>{
@@ -96,6 +102,7 @@ function MyVerticallyCenteredModal(props) {
       const action = {type:"SAVE_USER",payload:userName};
       //action 발행 
       dispatch(action);
+      initToken(localStorage.token);
     })
     .catch(error=>{
       console.log(error);
